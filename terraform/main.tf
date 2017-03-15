@@ -1,0 +1,3 @@
+provider "ddcloud" {
+    region = "AU"
+}
