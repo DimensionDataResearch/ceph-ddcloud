@@ -1,7 +1,16 @@
 - hosts: all
+  tags:
+    - init
   tasks:
-    - name: Expand root file-system
-      filesystem:
-        fstype: ext4
-        device: /dev/rootvol00/rootlvol00
-        resizefs: yes
+    - name: Set host name
+      command: hostnamectl set-hostname {{ inventory_hostname }}
+    - name: Persist host name
+      sudo: yes
+      copy:
+        dest: /etc/hostname
+        content: "{{ inventory_hostname }}"
+        force: yes
+        owner: root
+        group: root
+        mode: 0644
+
