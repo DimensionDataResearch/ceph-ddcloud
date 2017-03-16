@@ -27,7 +27,6 @@ resource "ddcloud_server" "ceph_node" {
     networkdomain = "${data.ddcloud_networkdomain.ceph.id}"
 
     primary_network_adapter {
-        vlan    = "${ddcloud_vlan.ceph_primary.id}"
         ipv4    = "${cidrhost(var.cluster_primary_network, var.cluster_first_node_host_number + count.index)}"
     }
 
