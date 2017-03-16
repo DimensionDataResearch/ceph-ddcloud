@@ -1,5 +1,4 @@
 ---
-# Defines deployment design and assigns role to server groups
 
 - hosts:
   - mons
@@ -51,6 +50,7 @@
   - ceph-agent
 
 - hosts: osds
+  serial: 1 # Ensure OSD numbers are serialised across hosts
   gather_facts: false
   become: True
   roles:
