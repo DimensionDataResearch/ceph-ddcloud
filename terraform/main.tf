@@ -23,7 +23,7 @@ variable "cluster_first_node_host_number" { default = 20 }
 variable "cluster_primary_network" { default = "10.5.50.0/24" }
 
 # The name or Id of the image used to create virtual machines.
-variable "os_image" { default = "Ubuntu 14.04 2 CPU" }
+variable "os_image" { default = "Ubuntu 16.04 2 CPU" }
 
 # Expose servers via public IP addresses (enable firewall ingress rules)?
 variable "expose_servers" { default = false }
@@ -38,7 +38,9 @@ variable "node_memory_gb" { default = 8 }
 variable "node_cpu_count" { default = 2 }
 
 # The size of the OS (root) volume for all deployed servers in the cluster.
-variable "os_disk_size_gb" { default = 20 }
+#
+# Expanding the root volume via Ansible is possible, but a bit of a pain. I'd avoid doing so if possible (so make sure this matches the disk size in the OS image).
+variable "os_disk_size_gb" { default = 10 }
 
 # The size of the data volume for all deployed servers in the cluster that need a separate volume for data.
 variable "data_disk_size_gb" { default = 50 }

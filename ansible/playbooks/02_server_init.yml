@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+    - name: Expand root file-system
+      filesystem:
+        fstype: ext4
+        device: /dev/rootvol00/rootlvol00
+        resizefs: yes
