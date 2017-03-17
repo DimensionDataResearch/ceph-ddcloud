@@ -39,7 +39,7 @@ resource "ddcloud_server" "ceph_node_mon" {
     # For now, pack all roles onto each node.
     tag {
         name    = "roles"
-        value   = "mons,agents,osds,mdss,rgws,nfss,restapis,rbdmirrors,clients,iscsigws"
+        value   = "mons,mdss"
     }
 }
 

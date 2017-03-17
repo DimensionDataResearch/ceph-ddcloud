@@ -13,4 +13,9 @@
         owner: root
         group: root
         mode: 0644
-
+    - name: Enable local host name resolution
+      sudo: yes
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ primary_ipv4 }} {{ inventory_hostname }}"
+        present: yes

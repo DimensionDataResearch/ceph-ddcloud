@@ -14,10 +14,10 @@ variable "network_domain_name" { default = "Ceph Demo" }
 variable "cluster_name" { default = "dev" }
 
 # The number of monitor nodes in the cluster.
-variable "cluster_node_count_mon" { default = 1 }
+variable "cluster_node_count_mon" { default = 3 }
 
 # The number of OSD nodes in the cluster.
-variable "cluster_node_count_osd" { default = 2 }
+variable "cluster_node_count_osd" { default = 3 }
 
 # The host number (within in the cluster's network) of the first admin node.
 variable "cluster_first_host_admin" { default = 20 }
