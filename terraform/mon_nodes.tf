@@ -2,8 +2,9 @@
 
 resource "ddcloud_server" "ceph_node_mon" {
     count                   = "${var.cluster_node_count_mon}"
-    name                    = "${var.cluster_name}-node-${format(var.count_format, count.index + 1)}"
-    description             = "${format("Node %d for %s cluster.", count.index+1, var.cluster_name)}"
+
+    name                    = "${var.cluster_name}-mon-${format(var.count_format, count.index + 1)}"
+    description             = "${format("Monitor node %d for %s cluster.", count.index+1, var.cluster_name)}"
     admin_password          = "${var.ssh_bootstrap_password}"
     auto_start              = "${var.node_auto_start}"
 
@@ -50,7 +51,7 @@ resource "ddcloud_nat" "ceph_node_mon" {
 	private_ipv4	= "${element(ddcloud_server.ceph_node_mon.*.primary_adapter_ipv4, count.index)}"
 }
 resource "ddcloud_address_list" "ceph_node_mons" {
-	name			= "CephNodes"
+	name			= "CephMonitor"
 	ip_version		= "IPv4"
 
 	addresses		= [ "${ddcloud_nat.ceph_node_mon.*.public_ipv4}" ]
@@ -58,7 +59,7 @@ resource "ddcloud_address_list" "ceph_node_mons" {
 	networkdomain	= "${data.ddcloud_networkdomain.ceph.id}"
 }
 resource "ddcloud_firewall_rule" "ceph_node_mon_ssh_in" {
-	name		= "nodes.ssh.inbound"
+	name		= "mon.ssh.inbound"
 	placement   = "first"
 	action		= "accept"
 	enabled		= true

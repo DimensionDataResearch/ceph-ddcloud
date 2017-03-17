@@ -40,7 +40,7 @@ resource "ddcloud_nat" "ceph_node_admin" {
 	private_ipv4	= "${element(ddcloud_server.ceph_node_admin.*.primary_adapter_ipv4, count.index)}"
 }
 resource "ddcloud_address_list" "ceph_node_admins" {
-	name			= "CephNodes"
+	name			= "CephAdmin"
 	ip_version		= "IPv4"
 
 	addresses		= [ "${ddcloud_nat.ceph_node_admin.public_ipv4}" ]
@@ -48,7 +48,7 @@ resource "ddcloud_address_list" "ceph_node_admins" {
 	networkdomain	= "${data.ddcloud_networkdomain.ceph.id}"
 }
 resource "ddcloud_firewall_rule" "ceph_node_admin_ssh_in" {
-	name		= "nodes.ssh.inbound"
+	name		= "admin.ssh.inbound"
 	placement   = "first"
 	action		= "accept"
 	enabled		= true

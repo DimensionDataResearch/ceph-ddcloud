@@ -2,7 +2,8 @@
 
 resource "ddcloud_server" "ceph_node_osd" {
     count                   = "${var.cluster_node_count_osd}"
-    name                    = "${var.cluster_name}-node-${format(var.count_format, count.index + 1)}"
+
+    name                    = "${var.cluster_name}-osd-${format(var.count_format, count.index + 1)}"
     description             = "${format("OSD node %d for %s cluster.", count.index+1, var.cluster_name)}"
     admin_password          = "${var.ssh_bootstrap_password}"
     auto_start              = "${var.node_auto_start}"
@@ -50,7 +51,7 @@ resource "ddcloud_nat" "ceph_node_osd" {
 	private_ipv4	= "${element(ddcloud_server.ceph_node_osd.*.primary_adapter_ipv4, count.index)}"
 }
 resource "ddcloud_address_list" "ceph_node_osds" {
-	name			= "CephNodes"
+	name			= "CephOSD"
 	ip_version		= "IPv4"
 
 	addresses		= [ "${ddcloud_nat.ceph_node_osd.*.public_ipv4}" ]
@@ -58,7 +59,7 @@ resource "ddcloud_address_list" "ceph_node_osds" {
 	networkdomain	= "${data.ddcloud_networkdomain.ceph.id}"
 }
 resource "ddcloud_firewall_rule" "ceph_node_osd_ssh_in" {
-	name		= "nodes.ssh.inbound"
+	name		= "osd.ssh.inbound"
 	placement   = "first"
 	action		= "accept"
 	enabled		= true
