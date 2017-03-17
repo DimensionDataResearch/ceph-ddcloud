@@ -1,9 +1,8 @@
-# Node (server) configuration
+# Admin node configuration
 
-resource "ddcloud_server" "ceph_node" {
-    count                   = "${var.cluster_node_count}"
-    name                    = "${var.cluster_name}-node-${format(var.count_format, count.index + 1)}"
-    description             = "${format("Node %d for %s cluster.", count.index+1, var.cluster_name)}"
+resource "ddcloud_server" "ceph_node_admin" {
+    name                    = "${var.cluster_name}-admin"
+    description             = "${format("Admin node for %s cluster.", var.cluster_name)}"
     admin_password          = "${var.ssh_bootstrap_password}"
     auto_start              = "${var.node_auto_start}"
 
@@ -17,17 +16,10 @@ resource "ddcloud_server" "ceph_node" {
         speed             = "STANDARD"
     }
 
-    # Data disk (/dev/sdb)
-    disk {
-        scsi_unit_id    = 1
-        size_gb         = "${var.data_disk_size_gb}"
-        speed           = "STANDARD"
-    }
-
     networkdomain = "${data.ddcloud_networkdomain.ceph.id}"
 
     primary_network_adapter {
-        ipv4    = "${cidrhost(var.cluster_primary_network, var.cluster_first_node_host_number + count.index)}"
+        ipv4    = "${cidrhost(var.cluster_primary_network, var.cluster_first_host_admin)}"
     }
 
     dns_primary     = "8.8.8.8"
@@ -38,26 +30,24 @@ resource "ddcloud_server" "ceph_node" {
     # For now, pack all roles onto each node.
     tag {
         name    = "roles"
-        value   = "mons,agents,osds,mdss,rgws,nfss,restapis,rbdmirrors,clients,iscsigws"
+        value   = "admins"
     }
 }
 
 # The node must be publicly accessible for provisioning.
-resource "ddcloud_nat" "ceph_node" {
-	count			= "${var.cluster_node_count}"
-
+resource "ddcloud_nat" "ceph_node_admin" {
 	networkdomain	= "${data.ddcloud_networkdomain.ceph.id}"
-	private_ipv4	= "${element(ddcloud_server.ceph_node.*.primary_adapter_ipv4, count.index)}"
+	private_ipv4	= "${element(ddcloud_server.ceph_node_admin.*.primary_adapter_ipv4, count.index)}"
 }
-resource "ddcloud_address_list" "ceph_nodes" {
+resource "ddcloud_address_list" "ceph_node_admins" {
 	name			= "CephNodes"
 	ip_version		= "IPv4"
 
-	addresses		= [ "${ddcloud_nat.ceph_node.*.public_ipv4}" ]
+	addresses		= [ "${ddcloud_nat.ceph_node_admin.public_ipv4}" ]
 
 	networkdomain	= "${data.ddcloud_networkdomain.ceph.id}"
 }
-resource "ddcloud_firewall_rule" "ceph_node_ssh_in" {
+resource "ddcloud_firewall_rule" "ceph_node_admin_ssh_in" {
 	name		= "nodes.ssh.inbound"
 	placement   = "first"
 	action		= "accept"
@@ -68,17 +58,15 @@ resource "ddcloud_firewall_rule" "ceph_node_ssh_in" {
 
 	source_address_list = "${ddcloud_address_list.clients.id}"
 
-	destination_address_list    = "${ddcloud_address_list.ceph_nodes.id}"
+	destination_address_list    = "${ddcloud_address_list.ceph_node_admins.id}"
 	destination_port			= 22 # SSH
 
 	networkdomain   = "${data.ddcloud_networkdomain.ceph.id}"
 }
 
 # Install an SSH key so that Ansible doesn't make us jump through hoops to authenticate.
-resource "null_resource" "ceph_node_ssh" {
-    count = "${var.cluster_node_count}"
-
-	# Install our SSH public key.
+resource "null_resource" "ceph_node_admin_ssh" {
+    # Install our SSH public key.
 	provisioner "remote-exec" {
 		inline = [
 			"mkdir -p ~/.ssh",
@@ -94,7 +82,7 @@ resource "null_resource" "ceph_node_ssh" {
 			user 		= "root"
 			password 	= "${var.ssh_bootstrap_password}"
 
-			host 		= "${element(ddcloud_nat.ceph_node.*.public_ipv4, count.index)}"
+			host 		= "${element(ddcloud_nat.ceph_node_admin.*.public_ipv4, count.index)}"
 		}
 	}
 }
