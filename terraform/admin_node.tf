@@ -30,7 +30,7 @@ resource "ddcloud_server" "ceph_node_admin" {
     # For now, pack all roles onto each node.
     tag {
         name    = "roles"
-        value   = "admins"
+        value   = "admins,mdss"
     }
 }
 
