@@ -39,8 +39,10 @@ resource "ddcloud_server" "ceph_node_mon" {
     # For now, pack all roles onto each node.
     tag {
         name    = "roles"
-        value   = "mons,mdss"
+        value   = "mons"
     }
+
+	depends_on = [ "ddcloud_vlan.ceph_primary" ]
 }
 
 # The node must be publicly accessible for provisioning.

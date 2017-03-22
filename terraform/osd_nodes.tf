@@ -39,8 +39,10 @@ resource "ddcloud_server" "ceph_node_osd" {
     # For now, pack all roles onto each node.
     tag {
         name    = "roles"
-        value   = "agents,osds,rgws,nfss,restapis,rbdmirrors,clients,iscsigws"
+        value   = "osds,rgws"
     }
+
+	depends_on = [ "ddcloud_vlan.ceph_primary" ]
 }
 
 # The node must be publicly accessible for provisioning.

@@ -11,7 +11,7 @@ variable "client_ip" { }
 variable "network_domain_name" { default = "Ceph Demo" }
 
 # The cluster name (used as a prefix / suffix for resource uniqueness).
-variable "cluster_name" { default = "dev" }
+variable "cluster_name" { default = "ceph" }
 
 # The number of monitor nodes in the cluster.
 variable "cluster_node_count_mon" { default = 3 }
@@ -32,7 +32,7 @@ variable "cluster_first_host_osd" { default = 40 }
 variable "cluster_primary_network" { default = "10.5.50.0/24" }
 
 # The name or Id of the image used to create virtual machines.
-variable "os_image" { default = "Ubuntu 14.04 2 CPU" }
+variable "os_image" { default = "CentOS 7 64-bit 2 CPU" }
 
 # Expose servers via public IP addresses (enable firewall ingress rules)?
 variable "expose_servers" { default = false }
