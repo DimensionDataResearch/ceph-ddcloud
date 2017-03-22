@@ -1,0 +1,146 @@
+---
+# Variables here are applicable to all host groups NOT roles.
+#
+# You can override them at the host or group level.
+
+###########
+# GENERAL #
+###########
+
+# The cluster name
+cluster: ceph
+
+# The name of the node that acts as the cluster's metadata server
+#
+# For now, do not change this.
+mds_node: "{{cluster}}-admin"
+
+###########
+# INSTALL #
+###########
+
+# If check_firewall is true, then ansible will try to determine if the
+# Ceph ports are blocked by a firewall. If the machine running ansible
+# cannot reach the Ceph ports for some other reason, you may need or
+# want to set this to False to skip those checks.
+check_firewall: False
+
+# This variable determines if ceph packages can be updated.  If False, the
+# package resources will use "state=present".  If True, they will use
+# "state=latest".
+upgrade_ceph_packages: False
+
+# Dependencies required on various distros
+debian_package_dependencies:
+ - python-pycurl
+ - hdparm
+ - ntp
+centos_package_dependencies:
+ - python-pycurl
+ - hdparm
+ - epel-release
+ - ntp
+ - python-setuptools
+ - libselinux-python
+redhat_package_dependencies:
+ - python-pycurl
+ - hdparm
+ - ntp
+ - python-setuptools
+
+# Enable the ntp service by default to avoid clock skew on ceph nodes
+ntp_service_enabled: true
+
+# The list of ceph packages needed for debian.
+#
+# Leave out ceph-fs-common on kraken or later.
+debian_ceph_packages:
+  - ceph
+  - ceph-common    #|--> yes, they are already all dependencies from 'ceph'
+  - ceph-fuse      #|--> however while proceding to rolling upgrades and the 'ceph' package upgrade
+  - libcephfs1     #|--> they don't get updated so we need to force them
+
+# Package origin
+ceph_origin: 'upstream'
+
+# Use ceph stable branch
+ceph_stable: true 
+ceph_stable_key: https://download.ceph.com/keys/release.asc
+ceph_stable_release: kraken
+
+######################
+# CEPH CONFIGURATION #
+######################
+
+## Ceph options
+#
+# Each cluster requires a unique, consistent filesystem ID. By
+# default, the playbook generates one for you and stores it in a file
+# in `fetch_directory`. If you want to customize how the fsid is
+# generated, you may find it useful to disable fsid generation to
+# avoid cluttering up your ansible repo. If you set `generate_fsid` to
+# false, you *must* generate `fsid` in another way.
+# fsid: "{{ cluster_uuid.stdout }}"
+generate_fsid: true
+
+# Enable authentication
+cephx: true
+
+## Monitor options
+#
+# Note that monitor_address is supplied for each host by the inventory plugin
+# (uses the private IPv4 address of the host's primary network adapter').
+
+# Use IPv4 or IPv6
+#
+# Note - IPv6 might work, but hasn't been tested on the MCP yet.
+ip_version: ipv4
+
+## OSD options
+#
+# OSD journal size in MB
+journal_size: 5120
+
+# The public (external) network for the OSD nodes.
+#
+# In the MCP this will usually be the same as the cluster network (i.e. private IPv4 addresses).
+# Do not use public (external) IP addresses reachable only via NAT as this will break stuff.
+public_network: 10.5.50.0/24
+
+# The primary network for the cluster's nodes.
+cluster_network: "{{ public_network }}"
+
+# OSD file-system options.
+osd_mkfs_type: xfs
+osd_mkfs_options_xfs: -f -i size=2048
+osd_mount_options_xfs: noatime,largeio,inode64,swalloc
+osd_objectstore: filestore
+
+## Rados Gateway options
+#
+# TODO: Decide which options to expose by default.
+
+# REST API options
+#
+restapi_interface: "{{ monitor_interface }}"
+restapi_address: "{{ monitor_address }}"
+restapi_port: 5000
+
+###################
+# CONFIG OVERRIDE #
+###################
+
+# Ceph configuration file override.
+# This allows you to specify more configuration options
+# using an INI style format.
+# The following sections are supported: [global], [mon], [osd], [mds], [rgw]
+#
+# Example:
+# ceph_conf_overrides:
+#   global:
+#     foo: 1234
+#     bar: 5678
+#
+ceph_conf_overrides:
+  global:
+    "osd pool default size": 3 # MUST less than or equal to the number of OSD nodes.

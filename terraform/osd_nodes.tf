@@ -25,6 +25,8 @@ resource "ddcloud_server" "ceph_node_osd" {
         speed           = "STANDARD"
     }
 
+	# If you create any additional disks to be used for storage, make sure you update the device list in group_vars/osds.yml.
+
     networkdomain = "${data.ddcloud_networkdomain.ceph.id}"
 
     primary_network_adapter {
