@@ -19,3 +19,26 @@
         line: "{{ hostvars[item]['private_ipv4'] }} {{ item }}"
         state: present
       with_items: groups['all']
+
+- hosts: admins
+  tags:
+    - init
+  tasks:
+    - name: Generate admin node SSH key
+      shell: "ssh-keygen -b 2048 -t rsa -N ''"
+    - name: Read SSH public key
+      shell: cat ~/.ssh/id_rsa.pub
+      register: _ssh_public_key
+    - name: Capture admin node SSH public key as a fact
+      set_fact:
+        admin_ssh_public_key: "{{ _ssh_public_key.stdout }}"
+      when: admin_ssh_public_key is not defined
+
+- hosts: all
+  tags:
+    - init
+  tasks:
+    - name: Install admin node SSH public key on all nodes
+      authorized_key:
+        user: root
+        key: "{{ hostvars[groups['admins'][0]]['admin_ssh_public_key'] }}"
