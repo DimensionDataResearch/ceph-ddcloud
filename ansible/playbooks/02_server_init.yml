@@ -13,9 +13,9 @@
         owner: root
         group: root
         mode: 0644
-    - name: Enable local host name resolution
-      sudo: yes
+    - name: Ensure host names for all nodes are resolvable
       lineinfile:
         dest: /etc/hosts
-        line: "{{ private_ipv4 }} {{ inventory_hostname }}"
+        line: "{{ hostvars[item]['private_ipv4'] }} {{ item }}"
         state: present
+      with_items: groups['all']
