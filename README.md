@@ -6,13 +6,15 @@ This is a work-in-progress, please [create an issue](https://github.com/Dimensio
 
 ## Getting started
 
-1. Customise `terraform/main.tf` and `ansible/ceph/group_vars/all.yml` as required.
-2. `cd terraform`
-3. `terraform apply`
-4. `terraform refresh`
-5. `cd ../ansible/ceph`
-6. `ansible all -m ping`
-7. `ansible-playbook ceph.yml`
+1. `python ansible/patch-ceph.py`
+2. Customise `terraform/main.tf` and `ansible/ceph/group_vars/*.yml` as required
+3. `cd terraform`
+4. `terraform apply`
+5. `terraform refresh`
+6. `cd ../ansible/ceph`
+7. `ansible all -m ping`
+8. `ansible-playbook ../playbooks/02_server_init.yml`
+9. `ansible-playbook ceph.yml`
 
 ## Notes
 
