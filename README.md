@@ -2,7 +2,7 @@
 
 Terraform configuration and Ansible playbooks to deploy Ceph in MCP 2.0.
 
-This is a work-in-progress, please [create an issue](https://github.com/DimensionDataResearch/ceph-ddcloud/issues/new) if you have questions, requests, or would like to contribute :-)
+If you have questions, requests, or would like to contribute, please please [create an issue](https://github.com/DimensionDataResearch/ceph-ddcloud/issues/new) because we'd love to hear from you :-)
 
 ## Getting started
 
@@ -19,4 +19,4 @@ This is a work-in-progress, please [create an issue](https://github.com/Dimensio
 
 ## Notes
 
-* Before you start, ensure that the `ansible/ceph/fetch` directory is not already present.
+* To ensure a new (from-scratch) cluster deployment, before you start ensure that the `ansible/ceph/fetch` directory is not already present.
