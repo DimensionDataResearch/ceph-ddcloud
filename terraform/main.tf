@@ -18,7 +18,7 @@ variable "cluster_node_count_mon" { default = 3 }
 
 # The number of OSD nodes in the cluster.
 #
-# If you change this, you MUST also update ceph_conf_overrides/global/"osd pool default size" in group_vars.yml.
+# If you change this, you MUST also update ceph_conf_overrides/global/"osd pool default size" in group_vars/all.yml.
 variable "cluster_node_count_osd" { default = 3 }
 
 # The host number (within in the cluster's network) of the first admin node.
