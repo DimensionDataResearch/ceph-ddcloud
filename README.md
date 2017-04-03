@@ -7,7 +7,7 @@ If you have questions, requests, or would like to contribute, please please [cre
 ## Getting started
 
 1. `python ansible/patch-ceph.py`
-2. Customise `terraform/main.tf` and `ansible/ceph/group_vars/*.yml` as required
+2. Customise [terraform/main.tf](terraform/main.tf) and `*.yml` in [ansible/ceph/group_vars](ansible/ceph/group_vars) as required
 3. `cd terraform`
 4. `terraform apply`
 5. `terraform refresh`
@@ -20,3 +20,5 @@ If you have questions, requests, or would like to contribute, please please [cre
 ## Notes
 
 * To ensure a new (from-scratch) cluster deployment, before you start ensure that the `ansible/ceph/fetch` directory is not already present.
+* Additional roles can be added to the monitor or OSD nodes by customising the `roles` key under `ddcloud_server` in [terraform/mon_nodes.tf](terraform/mon_nodes.tf) and / or [terraform/osd_nodes.tf](terraform/osd_nodes.tf).  
+  For a list of valid roles, see [ansible/ceph/ceph.yml](ansible/ceph/ceph.yml).
