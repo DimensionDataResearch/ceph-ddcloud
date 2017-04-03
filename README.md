@@ -12,9 +12,10 @@ This is a work-in-progress, please [create an issue](https://github.com/Dimensio
 4. `terraform apply`
 5. `terraform refresh`
 6. `cd ../ansible/ceph`
-7. `ansible all -m ping`
-8. `ansible-playbook ../playbooks/02_server_init.yml`
-9. `ansible-playbook ceph.yml`
+7. `ansible-playbook ../playbooks/01_ansible_bootstrap.yml`
+8. `ansible all -m ping`
+9. `ansible-playbook ../playbooks/02_server_init.yml`
+10. `ansible-playbook ceph.yml`
 
 ## Notes
 
