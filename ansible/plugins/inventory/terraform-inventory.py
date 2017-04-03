@@ -4,6 +4,11 @@
 """
 Dynamic inventory for Terraform - finds all `.tfstate` files below the working
 directory and generates an inventory based on their contents.
+
+Credit where credit's due - this code was adapted from Cisco's
+terraform.py plugin (https://github.com/CiscoCloud/terraform.py/tree/master/LICENSE).
+
+Thanks, guys, it's been immensely useful.
 """
 
 from __future__ import unicode_literals, print_function
