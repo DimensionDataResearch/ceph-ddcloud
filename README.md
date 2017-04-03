@@ -7,7 +7,7 @@ If you have questions, requests, or would like to contribute, please please [cre
 ## Getting started
 
 1. `python ansible/patch-ceph.py`
-2. Customise [terraform/main.tf](terraform/main.tf) and `*.yml` in [ansible/ceph/group_vars](ansible/ceph/group_vars) as required
+2. Customise [terraform/main.tf](terraform/main.tf) and `*.yml` in [ansible/ceph/group_vars](ansible/ddcloud_group_vars) as required
 3. `cd terraform`
 4. `terraform apply`
 5. `terraform refresh`
