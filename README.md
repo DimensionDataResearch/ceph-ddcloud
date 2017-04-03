@@ -8,14 +8,15 @@ If you have questions, requests, or would like to contribute, please please [cre
 
 1. `python ansible/patch-ceph.py`
 2. Customise [terraform/main.tf](terraform/main.tf) and `*.yml` in [ansible/ceph/group_vars](ansible/ddcloud_group_vars) as required
-3. `cd terraform`
-4. `terraform apply`
-5. `terraform refresh`
-6. `cd ../ansible/ceph`
-7. `ansible-playbook ../playbooks/01_ansible_bootstrap.yml`
-8. `ansible all -m ping`
-9. `ansible-playbook ../playbooks/02_server_init.yml`
-10. `ansible-playbook ceph.yml`
+3. Run `curl https://api.ipify.org`, and add the resulting IP address to `terraform/terraform.tfvars` as `client_ip` (create this file if it does not already exist)
+4. `cd terraform`
+5. `terraform apply`
+6. `terraform refresh`
+7. `cd ../ansible/ceph`
+8. `ansible-playbook ../playbooks/01_ansible_bootstrap.yml`
+9. `ansible all -m ping`
+10. `ansible-playbook ../playbooks/02_server_init.yml`
+11. `ansible-playbook ceph.yml`
 
 ## Notes
 
